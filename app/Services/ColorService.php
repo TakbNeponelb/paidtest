@@ -31,13 +31,13 @@ class ColorService implements BuyInterface
         return $this->buy();
     }
 
-    private function buy(): bool
+    private function buy()
     {
 
         $taxi = UserTaxi::findOrFail($this->userTaxi->id);
 
         if ($this->color->id == $taxi->color_id) {
-            return false;
+            return 'Цвет уже выбран';
         } 
         else if ($taxi->change_color > 0 && $this->color->id != $taxi->color_id) {
             UserService::decreaseCredits($this->user, $this->cost);
@@ -46,12 +46,12 @@ class ColorService implements BuyInterface
         $taxi->change_color += 1;
         $taxi->color_id = $this->color->id;
         $taxi->save();
-        return true;
+        return null;
     }
 
     public function canBuy(): ?string
     {
-        if ($this->user->credit < $this->cost) {
+        if (($this->user->credit < $this->cost) && ($this->userTaxi->change_color != 0)) {
             return 'Недостаточно средств';
         }
 

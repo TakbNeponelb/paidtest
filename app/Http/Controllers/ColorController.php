@@ -19,7 +19,7 @@ class ColorController extends Controller
         $proccess = $colorService->validateAndBuy();
         
 
-        if ($proccess !== true) {
+        if ($proccess !== null) {
             return redirect()->route('taxi.list')->with('error', $proccess);
         }
 
