@@ -11,3 +11,4 @@ npm run dev # опционально
 
 php artisan test #покрытие контроллера ColorCOntroller тестами
 ```
+# paidtest
