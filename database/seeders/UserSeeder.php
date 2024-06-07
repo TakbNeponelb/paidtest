@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Taxi;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
 
-class TaxiSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Taxi::factory(10)->create();
-        
+        User::factory(10)->create();
     }
 }

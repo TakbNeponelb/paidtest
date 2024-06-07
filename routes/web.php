@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ColorController;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -21,8 +22,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/list', [Controller::class, 'list'])->name('taxi.list');
     Route::post('/buy/{taxi}', [Controller::class, 'buy'])->name('taxi.buy');
+    Route::post('/list/{taxi}', [ColorController::class, 'update'])->name('color.update');
 });
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+

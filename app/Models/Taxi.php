@@ -10,6 +10,14 @@ class Taxi extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'key', 'price',
+        'name', 
+        'key', 
+        'price',
+        'color_id',
     ];
+
+    public function color()
+    {
+        return $this->belongsTo(Color::class);
+    }
 }

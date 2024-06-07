@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BuyRequest;
 use App\Models\Taxi;
+use App\Models\Color;
 use App\Services\TaxiService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -26,13 +27,15 @@ class Controller extends BaseController
     public function list()
     {
         return view('taxi_purchased', [
-            'userTaxis' => Auth::user()->taxis
+            'userTaxis' => Auth::user()->taxis,
+            'colors' => Color::all(),
         ]);
     }
 
     public function buy(BuyRequest $request, Taxi $taxi)
     {
-        $proccess = TaxiService::validateAndBuy(Auth::user(), $taxi);
+        $taxiService = new TaxiService($taxi);
+        $proccess = $taxiService->validateAndBuy();
 
         if ($proccess !== true) {
             return redirect()->route('app')->with('error', $proccess);

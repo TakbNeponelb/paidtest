@@ -2,38 +2,50 @@
 
 namespace App\Services;
 
+use App\Contracts\BuyInterface;
 use App\Models\Taxi;
 use App\Models\User;
 use App\Models\UserTaxi;
+use Illuminate\Support\Facades\Auth;
 
-class TaxiService
+class TaxiService implements BuyInterface
 {
-    public static function validateAndBuy(User $user, Taxi $taxi): bool|string|null
-    {
-        if ($validate = self::canBuy($user, $taxi)) {
-            return $validate;
-        }
+    private $taxi;
 
-        return self::buy($user, $taxi);
+    private $user;
+
+    public function __construct(Taxi $taxi)
+    {
+        $this->taxi = $taxi;
+        $this->user = Auth::user();
     }
 
-    private static function buy(User $user, Taxi $taxi): bool
+    public function validateAndBuy(): bool|string|null
     {
-        UserService::decreaseCredits($user, $taxi->price);
+        if ($validate = $this->canBuy()) {
+            return $validate;
+        }
+        return $this->buy();
+    }
+
+    private function buy(): bool
+    {
+        UserService::decreaseCredits($this->user, $this->taxi->price);
 
         $userTaxi = new UserTaxi();
-        $userTaxi->user_id = $user->id;
-        $userTaxi->taxi_id = $taxi->id;
-        $userTaxi->price = $taxi->price;
+        $userTaxi->user_id = $this->user->id;
+        $userTaxi->taxi_id = $this->taxi->id;
+        $userTaxi->price = $this->taxi->price;
+        $userTaxi->color_id = $this->taxi->color->id;
         $userTaxi->save();
 
         return true;
     }
 
-    public static function canBuy(User $user, Taxi $taxi): ?string
+    public function canBuy(): ?string
     {
-        if ($user->credit < $taxi->price) {
-            return 'Not enough credit.';
+        if ($this->user->credit < $this->taxi->price) {
+            return 'Недостаточно средств';
         }
 
         return null;

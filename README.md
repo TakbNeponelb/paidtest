@@ -3,8 +3,8 @@
 composer install
 npm install
 php artisan key:generate
-php artisan migrate install
-php artisan db:seed --class=TaxiSeeder
+php artisan migrate
+php artisan db:seed
 
 npm run build
 npm run dev # опционально
